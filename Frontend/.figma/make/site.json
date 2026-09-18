@@ -1,0 +1,10 @@
+{
+  "description": "An AI-assisted platform for small Indian retailers to manage sales, inventory, customer credit, payments, and shop data through voice or manual input.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
