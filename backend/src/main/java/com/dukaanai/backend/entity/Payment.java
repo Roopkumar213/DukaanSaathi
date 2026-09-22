@@ -37,6 +37,13 @@ public class Payment {
     @Builder.Default
     private String paymentMode = "CASH";
 
+    @Column(length = 100)
+    private String providerTransactionId;
+
+    @Builder.Default
+    @Column(length = 40)
+    private String verificationStatus = "UNVERIFIED";
+
     private String note;
 
     @Builder.Default

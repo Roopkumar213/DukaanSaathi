@@ -47,7 +47,7 @@ export default function SearchOverlay() {
 
         {!q && (
           <div className="p-4">
-            <p className="text-xs text-[#64748B] font-medium uppercase tracking-wide mb-3">Ask DukaanAI</p>
+            <p className="text-xs text-[#64748B] font-medium uppercase tracking-wide mb-3">Ask DukaanSaathi</p>
             <div className="flex flex-wrap gap-2">
               {['How much rice is left?', 'Who owes me money?', 'Today\'s sales total?'].map(s => (
                 <button key={s} onClick={() => { setSearchOpen(false); navigate('ai-assistant'); }}

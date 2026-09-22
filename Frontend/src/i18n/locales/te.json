@@ -1,8 +1,8 @@
 {
   "common": {
-    "appName": "DukaanAI",
-    "tagline": "కిరాణా సహాయకుడు",
-    "loading": "DukaanAI లోడవుతోంది...",
+    "appName": "DukaanSaathi",
+    "tagline": "మీ దుకాణం, మాట్లాడితే చాలు",
+    "loading": "DukaanSaathi లోడవుతోంది...",
     "save": "సేవ్ చేయి",
     "cancel": "రద్దు చేయి",
     "back": "వెనుకకు",
@@ -65,7 +65,7 @@
     "loggingIn": "సైన్ ఇన్ అవుతోంది...",
     "registering": "ఖాతా సృష్టిస్తోంది...",
     "welcomeBack": "తిరిగి స్వాగతం",
-    "createYourAccount": "మీ DukaanAI ఖాతా సృష్టించండి",
+    "createYourAccount": "మీ DukaanSaathi ఖాతా సృష్టించండి",
     "loginSubtitle": "మీ దుకాణాన్ని నిర్వహించడానికి సైన్ ఇన్ చేయండి.",
     "registerSubtitle": "మీ దుకాణాన్ని స్మార్ట్‌గా నిర్వహించండి."
   },

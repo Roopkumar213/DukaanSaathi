@@ -9,4 +9,6 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, String> {
     List<Payment> findByShopIdOrderByCreatedAtDesc(String shopId);
     List<Payment> findByCustomerIdOrderByCreatedAtDesc(String customerId);
+    java.util.Optional<Payment> findByShopIdAndProviderTransactionId(String shopId, String providerTransactionId);
+    boolean existsByShopIdAndProviderTransactionId(String shopId, String providerTransactionId);
 }

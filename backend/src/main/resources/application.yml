@@ -22,6 +22,10 @@ dukaanai:
     gemini:
       api-key: ${AI_API_KEY:}
       model: ${GEMINI_MODEL:gemini-1.5-flash}
+      live-model: ${GEMINI_LIVE_MODEL:gemini-2.0-flash-exp}
+  payment:
+    webhook-secret: ${UPI_WEBHOOK_SECRET:dukaansaathi-upi-webhook-test-secret}
+    verification-provider: ${UPI_VERIFICATION_PROVIDER:manual}
 
 ---
 # Dev Profile: Zero-setup persistent MySQL-compatible file database

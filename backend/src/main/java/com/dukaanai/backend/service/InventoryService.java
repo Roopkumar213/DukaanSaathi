@@ -35,6 +35,15 @@ public class InventoryService {
                 .collect(Collectors.toList());
     }
 
+    public List<ProductDto> searchProducts(String shopId, String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return getProducts(shopId);
+        }
+        return productRepository.findByShopIdAndNameContainingIgnoreCase(shopId, query.trim()).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public ProductDto createProduct(String shopId, ProductRequest req) {
         Shop shop = shopRepository.findById(shopId)

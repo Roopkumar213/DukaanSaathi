@@ -1,8 +1,8 @@
 {
   "common": {
-    "appName": "DukaanAI",
-    "tagline": "किराना सहायक",
-    "loading": "DukaanAI लोड हो रहा है...",
+    "appName": "DukaanSaathi",
+    "tagline": "आपकी दुकान, बस बोलिए",
+    "loading": "DukaanSaathi लोड हो रहा है...",
     "save": "सहेजें",
     "cancel": "रद्द करें",
     "back": "वापस",
@@ -65,7 +65,7 @@
     "loggingIn": "साइन इन हो रहा है...",
     "registering": "खाता बनाया जा रहा है...",
     "welcomeBack": "वापस आपका स्वागत है",
-    "createYourAccount": "अपना DukaanAI खाता बनाएं",
+    "createYourAccount": "अपना DukaanSaathi खाता बनाएं",
     "loginSubtitle": "अपनी दुकान प्रबंधित करने के लिए साइन इन करें।",
     "registerSubtitle": "अपनी दुकान को और स्मार्ट बनाएं।"
   },

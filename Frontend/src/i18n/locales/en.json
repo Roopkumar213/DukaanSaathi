@@ -1,8 +1,8 @@
 {
   "common": {
-    "appName": "DukaanAI",
-    "tagline": "Kirana Assistant",
-    "loading": "Loading DukaanAI...",
+    "appName": "DukaanSaathi",
+    "tagline": "Your shop, just talk",
+    "loading": "Loading DukaanSaathi...",
     "save": "Save",
     "cancel": "Cancel",
     "back": "Back",
@@ -65,7 +65,7 @@
     "loggingIn": "Signing in...",
     "registering": "Creating account...",
     "welcomeBack": "Welcome back",
-    "createYourAccount": "Create your DukaanAI account",
+    "createYourAccount": "Create your DukaanSaathi account",
     "loginSubtitle": "Sign in to manage your store.",
     "registerSubtitle": "Start managing your store smarter."
   },

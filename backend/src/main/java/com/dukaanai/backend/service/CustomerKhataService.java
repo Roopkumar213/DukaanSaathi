@@ -34,6 +34,15 @@ public class CustomerKhataService {
         return list.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
+    public List<CustomerDto> searchCustomers(String shopId, String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return getCustomers(shopId, false);
+        }
+        return customerRepository.searchCustomers(shopId, query.trim()).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
     public CustomerDetailDto getCustomerDetail(String shopId, String customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .filter(c -> c.getShop().getId().equals(shopId))

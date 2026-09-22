@@ -37,7 +37,7 @@ export default function Activity() {
         <EmptyState
           icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5"/><path d="M10 7v3l2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
           title="No activity yet"
-          description="Activity will appear here as you use DukaanAI."
+          description="Activity will appear here as you use DukaanSaathi."
         />
       ) : (
         <div className="relative">

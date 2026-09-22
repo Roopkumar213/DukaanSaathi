@@ -22,21 +22,21 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">1. Agreement to Terms</h2>
             <p>
-              By registering an account, accessing, or using DukaanAI (&quot;the Service&quot;), you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not use the application.
+              By registering an account, accessing, or using DukaanSaathi (&quot;the Service&quot;), you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not use the application.
             </p>
           </section>
 
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">2. Business Account &amp; Shop Isolation</h2>
             <p>
-              Each account corresponds to an authenticated merchant and designated store identity (&quot;Shop&quot;). You are responsible for maintaining the confidentiality of your login credentials and for all activities conducted under your store.duk DukaanAI enforces strict cryptographic shop-level isolation to ensure your business data is only accessible to authorized principals.
+              Each account corresponds to an authenticated merchant and designated store identity (&quot;Shop&quot;). You are responsible for maintaining the confidentiality of your login credentials and for all activities conducted under your store.duk DukaanSaathi enforces strict cryptographic shop-level isolation to ensure your business data is only accessible to authorized principals.
             </p>
           </section>
 
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">3. Digital Khata &amp; Authoritative Pricing</h2>
             <p>
-              DukaanAI provides tools for recording sales, inventory transactions, customer records, and credit ledgers (&quot;Khata&quot;). All financial totals, inventory deductions, and credit balances are authoritative as calculated and recorded by the backend database service. The application is an administrative ledger and does not provide financial lending or banking guarantees.
+              DukaanSaathi provides tools for recording sales, inventory transactions, customer records, and credit ledgers (&quot;Khata&quot;). All financial totals, inventory deductions, and credit balances are authoritative as calculated and recorded by the backend database service. The application is an administrative ledger and does not provide financial lending or banking guarantees.
             </p>
           </section>
 
@@ -50,27 +50,27 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">5. Data Ownership &amp; Integrity</h2>
             <p>
-              You retain ownership of all product lists, customer entries, sales records, and ledger data created in your shop. DukaanAI does not fabricate dummy data or alter your historical financial records.
+              You retain ownership of all product lists, customer entries, sales records, and ledger data created in your shop. DukaanSaathi does not fabricate dummy data or alter your historical financial records.
             </p>
           </section>
 
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">6. Limitation of Liability</h2>
             <p>
-              DukaanAI is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. In no event shall DukaanAI be liable for indirect, incidental, or consequential damages resulting from store operation, pricing disputes, or network outages.
+              DukaanSaathi is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. In no event shall DukaanSaathi be liable for indirect, incidental, or consequential damages resulting from store operation, pricing disputes, or network outages.
             </p>
           </section>
 
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">7. Contact Information</h2>
             <p>
-              For legal inquiries or account termination requests, please contact our support team at <span className="font-mono text-slate-900">support@dukaanai.local</span>.
+              For legal inquiries or account termination requests, please contact our support team at <span className="font-mono text-slate-900">support@dukaansaathi.local</span>.
             </p>
           </section>
         </div>
 
         <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <span>&copy; {new Date().getFullYear()} DukaanAI. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} DukaanSaathi. All rights reserved.</span>
           <Link to="/privacy-policy" className="hover:text-slate-800 underline">Privacy Policy</Link>
         </div>
       </div>

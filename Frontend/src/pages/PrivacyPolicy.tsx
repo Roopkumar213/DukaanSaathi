@@ -22,7 +22,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">1. Introduction</h2>
             <p>
-              DukaanAI is committed to protecting the privacy and security of small retailers and their customer data. This Privacy Policy details the types of information we collect, how it is secured, and how it is processed.
+              DukaanSaathi is committed to protecting the privacy and security of small retailers and their customer data. This Privacy Policy details the types of information we collect, how it is secured, and how it is processed.
             </p>
           </section>
 
@@ -60,13 +60,13 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-base font-semibold text-slate-900 mb-2">6. Inquiries</h2>
             <p>
-              If you have any questions or concerns regarding our privacy practices, please contact us at <span className="font-mono text-slate-900">privacy@dukaanai.local</span>.
+              If you have any questions or concerns regarding our privacy practices, please contact us at <span className="font-mono text-slate-900">privacy@dukaansaathi.local</span>.
             </p>
           </section>
         </div>
 
         <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <span>&copy; {new Date().getFullYear()} DukaanAI. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} DukaanSaathi. All rights reserved.</span>
           <Link to="/terms-of-service" className="hover:text-slate-800 underline">Terms of Service</Link>
         </div>
       </div>
