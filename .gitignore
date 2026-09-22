@@ -1,0 +1,50 @@
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+aws-credentials*
+
+# Java / Maven
+target/
+backend/target/
+.tools/
+backend/.tools/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+backend/data/
+*.mv.db
+*.trace.db
+backend/uploads/
+uploads/
+
+# Node / Vite / Frontend
+node_modules/
+Frontend/node_modules/
+dist/
+Frontend/dist/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & OS
+.idea/
+.vscode/
+*.iml
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# SAM / Python / Scratch
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.aws-sam/
+*.zip
+scratch/

@@ -1,4 +1,8 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { productsApi } from './api/productsApi';
+import { salesApi } from './api/salesApi';
+import { customersApi } from './api/customersApi';
+import { useAuth } from './context/AuthContext';
 
 export type Page =
   | 'overview'
@@ -13,7 +17,9 @@ export type Page =
   | 'payments'
   | 'ai-assistant'
   | 'activity'
-  | 'settings';
+  | 'settings'
+  | 'terms-of-service'
+  | 'privacy-policy';
 
 export interface Product {
   id: string;
@@ -88,214 +94,6 @@ function makeId() {
   return Math.random().toString(36).slice(2, 9);
 }
 
-const initialProducts: Product[] = [
-  {
-    id: 'rice',
-    name: 'Rice',
-    category: 'Grains',
-    quantity: 23,
-    unit: 'kg',
-    price: 60,
-    minStock: 5,
-    history: [
-      { id: '1', type: 'in', quantity: 25, reason: 'Initial stock', date: new Date('2026-09-17T08:00:00') },
-      { id: '2', type: 'out', quantity: 2, reason: 'Sale to Ramesh', date: new Date('2026-09-18T10:42:00') },
-    ],
-  },
-  {
-    id: 'sugar',
-    name: 'Sugar',
-    category: 'Grains',
-    quantity: 18,
-    unit: 'kg',
-    price: 48,
-    minStock: 5,
-    history: [
-      { id: '3', type: 'in', quantity: 20, reason: 'Initial stock', date: new Date('2026-09-17T08:00:00') },
-      { id: '4', type: 'out', quantity: 1, reason: 'Sale to Lakshmi', date: new Date('2026-09-18T10:35:00') },
-      { id: '5', type: 'out', quantity: 1, reason: 'Sale to Priya', date: new Date('2026-09-18T09:10:00') },
-    ],
-  },
-  {
-    id: 'surf',
-    name: 'Surf',
-    category: 'Household',
-    quantity: 12,
-    unit: 'packets',
-    price: 35,
-    minStock: 10,
-    history: [
-      { id: '6', type: 'in', quantity: 15, reason: 'Initial stock', date: new Date('2026-09-17T08:00:00') },
-      { id: '7', type: 'out', quantity: 3, reason: 'Sales', date: new Date('2026-09-18T09:30:00') },
-    ],
-  },
-  {
-    id: 'dal',
-    name: 'Dal',
-    category: 'Pulses',
-    quantity: 10,
-    unit: 'kg',
-    price: 110,
-    minStock: 5,
-    history: [
-      { id: '8', type: 'in', quantity: 10, reason: 'Initial stock', date: new Date('2026-09-17T08:00:00') },
-    ],
-  },
-  {
-    id: 'oil',
-    name: 'Oil',
-    category: 'Oils',
-    quantity: 4,
-    unit: 'L',
-    price: 140,
-    minStock: 5,
-    history: [
-      { id: '9', type: 'in', quantity: 8, reason: 'Initial stock', date: new Date('2026-09-17T08:00:00') },
-      { id: '10', type: 'out', quantity: 4, reason: 'Sales', date: new Date('2026-09-18T09:00:00') },
-    ],
-  },
-];
-
-const initialCustomers: Customer[] = [
-  {
-    id: 'ramesh',
-    name: 'Ramesh',
-    phone: '98765 43210',
-    balance: 160,
-    transactions: [
-      { id: 't1', type: 'sale', amount: 120, note: 'Previous balance', date: new Date('2026-09-15T10:00:00') },
-      { id: 't2', type: 'sale', amount: 340, note: 'Rice 2kg + misc', date: new Date('2026-09-18T10:42:00') },
-      { id: 't3', type: 'debit', amount: 300, note: 'Payment received', date: new Date('2026-09-18T10:42:00') },
-    ],
-  },
-  {
-    id: 'lakshmi',
-    name: 'Lakshmi',
-    phone: '91234 56789',
-    balance: 0,
-    transactions: [
-      { id: 't4', type: 'sale', amount: 48, note: 'Sugar 1kg', date: new Date('2026-09-18T10:35:00') },
-      { id: 't5', type: 'debit', amount: 48, note: 'Payment received', date: new Date('2026-09-18T10:35:00') },
-    ],
-  },
-  {
-    id: 'suresh',
-    name: 'Suresh',
-    phone: '90000 11111',
-    balance: 540,
-    transactions: [
-      { id: 't6', type: 'sale', amount: 280, note: 'Dal 2kg + Oil 1L', date: new Date('2026-09-16T11:00:00') },
-      { id: 't7', type: 'sale', amount: 260, note: 'Rice 2kg + Sugar 1kg', date: new Date('2026-09-17T09:30:00') },
-    ],
-  },
-  { id: 'priya', name: 'Priya', phone: '99887 76655', balance: 0, transactions: [] },
-  { id: 'ganesh', name: 'Ganesh', phone: '88776 65544', balance: 180, transactions: [
-    { id: 't8', type: 'sale', amount: 180, note: 'Surf 5 packets + Sugar 1kg', date: new Date('2026-09-17T14:00:00') },
-  ]},
-  { id: 'meena', name: 'Meena', phone: '77665 54433', balance: 320, transactions: [
-    { id: 't9', type: 'sale', amount: 320, note: 'Dal 2kg + Oil 1L', date: new Date('2026-09-17T16:00:00') },
-  ]},
-  { id: 'raju', name: 'Raju', phone: '66554 43322', balance: 90, transactions: [
-    { id: 't10', type: 'sale', amount: 90, note: 'Sugar 1kg + Rice 1kg', date: new Date('2026-09-18T08:30:00') },
-  ]},
-  { id: 'kavya', name: 'Kavya', phone: '55443 32211', balance: 210, transactions: [
-    { id: 't11', type: 'sale', amount: 210, note: 'Oil 1L + Surf 2 packets', date: new Date('2026-09-17T12:00:00') },
-  ]},
-  { id: 'mohan', name: 'Mohan', phone: '44332 21100', balance: 0, transactions: [] },
-  { id: 'sunita', name: 'Sunita', phone: '33221 10099', balance: 760, transactions: [
-    { id: 't12', type: 'sale', amount: 760, note: 'Dal 5kg + Rice 3kg + Oil 2L', date: new Date('2026-09-15T10:00:00') },
-  ]},
-  { id: 'vijay', name: 'Vijay', phone: '22110 09988', balance: 0, transactions: [] },
-  { id: 'anita', name: 'Anita', phone: '11009 98877', balance: 20, transactions: [
-    { id: 't13', type: 'sale', amount: 20, note: 'Surf 1 packet', date: new Date('2026-09-18T09:45:00') },
-  ]},
-];
-
-const initialSales: Sale[] = [
-  {
-    id: 'S1042',
-    customer: 'Ramesh',
-    items: [{ product: 'Rice', quantity: 2, unit: 'kg', price: 120, total: 240 }],
-    total: 340,
-    received: 300,
-    outstanding: 40,
-    status: 'partial',
-    paymentMode: 'cash',
-    date: new Date('2026-09-18T10:42:00'),
-  },
-  {
-    id: 'S1041',
-    customer: 'Lakshmi',
-    items: [{ product: 'Sugar', quantity: 1, unit: 'kg', price: 48, total: 48 }],
-    total: 48,
-    received: 48,
-    outstanding: 0,
-    status: 'paid',
-    paymentMode: 'upi',
-    date: new Date('2026-09-18T10:35:00'),
-  },
-  {
-    id: 'S1040',
-    customer: 'Raju',
-    items: [
-      { product: 'Sugar', quantity: 1, unit: 'kg', price: 48, total: 48 },
-      { product: 'Rice', quantity: 1, unit: 'kg', price: 60, total: 60 },
-    ],
-    total: 108,
-    received: 0,
-    outstanding: 108,
-    status: 'credit',
-    paymentMode: 'cash',
-    date: new Date('2026-09-18T08:30:00'),
-  },
-  {
-    id: 'S1039',
-    customer: 'Anita',
-    items: [{ product: 'Surf', quantity: 1, unit: 'packets', price: 35, total: 35 }],
-    total: 35,
-    received: 15,
-    outstanding: 20,
-    status: 'partial',
-    paymentMode: 'cash',
-    date: new Date('2026-09-18T09:45:00'),
-  },
-  {
-    id: 'S1038',
-    customer: 'Priya',
-    items: [{ product: 'Sugar', quantity: 1, unit: 'kg', price: 48, total: 48 }],
-    total: 48,
-    received: 48,
-    outstanding: 0,
-    status: 'paid',
-    paymentMode: 'cash',
-    date: new Date('2026-09-18T09:10:00'),
-  },
-  {
-    id: 'S1037',
-    customer: 'Mohan',
-    items: [{ product: 'Surf', quantity: 2, unit: 'packets', price: 35, total: 70 }],
-    total: 70,
-    received: 70,
-    outstanding: 0,
-    status: 'paid',
-    paymentMode: 'upi',
-    date: new Date('2026-09-18T09:00:00'),
-  },
-];
-
-const initialActivity: ActivityEntry[] = [
-  { id: 'a1', type: 'sale', title: 'Sale recorded', description: 'Ramesh purchased 2 kg Rice', date: new Date('2026-09-18T10:42:00') },
-  { id: 'a2', type: 'inventory', title: 'Inventory updated', description: 'Rice −2 kg (23 kg remaining)', date: new Date('2026-09-18T10:42:00') },
-  { id: 'a3', type: 'payment', title: 'Payment recorded', description: '₹300 received from Ramesh', date: new Date('2026-09-18T10:42:00') },
-  { id: 'a4', type: 'khata', title: 'Khata updated', description: 'Ramesh has ₹160 outstanding', date: new Date('2026-09-18T10:42:00') },
-  { id: 'a5', type: 'sale', title: 'Sale recorded', description: 'Lakshmi purchased 1 kg Sugar', date: new Date('2026-09-18T10:35:00') },
-  { id: 'a6', type: 'payment', title: 'Payment recorded', description: '₹48 received from Lakshmi', date: new Date('2026-09-18T10:35:00') },
-  { id: 'a7', type: 'sale', title: 'Sale recorded', description: 'Anita purchased 1 packet Surf', date: new Date('2026-09-18T09:45:00') },
-  { id: 'a8', type: 'khata', title: 'Khata updated', description: 'Anita has ₹20 outstanding', date: new Date('2026-09-18T09:45:00') },
-  { id: 'a9', type: 'sale', title: 'Sale recorded', description: 'Priya purchased 1 kg Sugar', date: new Date('2026-09-18T09:10:00') },
-  { id: 'a10', type: 'sale', title: 'Sale recorded', description: 'Mohan purchased 2 packets Surf', date: new Date('2026-09-18T09:00:00') },
-];
-
 interface AppState {
   page: Page;
   selectedSaleId: string | null;
@@ -308,41 +106,41 @@ interface AppState {
   toasts: Toast[];
   notifications: number;
   searchOpen: boolean;
+  loadingData: boolean;
 }
 
 interface AppContextType extends AppState {
   navigate: (page: Page, params?: Partial<AppState>) => void;
-  addSale: (sale: Omit<Sale, 'id' | 'date'>) => Sale;
-  addProduct: (product: Omit<Product, 'id' | 'history'>) => void;
-  updateProduct: (id: string, updates: Partial<Product>) => void;
-  addStockHistory: (productId: string, event: Omit<StockEvent, 'id'>) => void;
-  addCustomer: (name: string, phone?: string) => void;
-  recordPayment: (customerId: string, amount: number, mode: string) => void;
+  addSale: (sale: Omit<Sale, 'id' | 'date'>) => Promise<Sale>;
+  addProduct: (product: Omit<Product, 'id' | 'history'>) => Promise<void>;
+  updateProduct: (id: string, updates: Partial<Product>) => Promise<void>;
+  addStockHistory: (productId: string, event: Omit<StockEvent, 'id'>) => Promise<void>;
+  addCustomer: (name: string, phone?: string) => Promise<void>;
+  recordPayment: (customerId: string, amount: number, mode: string) => Promise<void>;
   showToast: (type: Toast['type'], message: string) => void;
   dismissToast: (id: string) => void;
   setSearchOpen: (open: boolean) => void;
+  refreshData: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
   const [state, setState] = useState<AppState>({
     page: 'overview',
     selectedSaleId: null,
     selectedProductId: null,
     selectedCustomerId: null,
-    products: initialProducts,
-    customers: initialCustomers,
-    sales: initialSales,
-    activity: initialActivity,
+    products: [],
+    customers: [],
+    sales: [],
+    activity: [],
     toasts: [],
-    notifications: 3,
+    notifications: 0,
     searchOpen: false,
+    loadingData: false,
   });
-
-  const navigate = useCallback((page: Page, params?: Partial<AppState>) => {
-    setState(s => ({ ...s, page, ...params }));
-  }, []);
 
   const showToast = useCallback((type: Toast['type'], message: string) => {
     const id = makeId();
@@ -356,103 +154,200 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setState(s => ({ ...s, toasts: s.toasts.filter(t => t.id !== id) }));
   }, []);
 
-  const addSale = useCallback((sale: Omit<Sale, 'id' | 'date'>) => {
-    const newSale: Sale = { ...sale, id: `S${1000 + Math.floor(Math.random() * 999)}`, date: new Date() };
-    setState(s => {
-      const newProducts = s.products.map(p => {
-        const item = sale.items.find(i => i.product.toLowerCase() === p.name.toLowerCase());
-        if (!item) return p;
-        return {
-          ...p,
-          quantity: Math.max(0, p.quantity - item.quantity),
-          history: [...p.history, { id: makeId(), type: 'out' as const, quantity: item.quantity, reason: `Sale to ${sale.customer}`, date: new Date() }],
-        };
-      });
-      const newCustomers = s.customers.map(c => {
-        if (c.name.toLowerCase() !== sale.customer.toLowerCase()) return c;
-        return {
-          ...c,
-          balance: c.balance + sale.outstanding,
-          transactions: [...c.transactions, { id: makeId(), type: 'sale' as const, amount: sale.total, note: sale.items.map(i => `${i.product} ${i.quantity}${i.unit}`).join(', '), date: new Date() }],
-        };
-      });
-      const newActivity: ActivityEntry[] = [
-        { id: makeId(), type: 'sale', title: 'Sale recorded', description: `${sale.customer} purchased ${sale.items.map(i => `${i.quantity} ${i.unit} ${i.product}`).join(', ')}`, date: new Date() },
-        ...sale.items.map(i => ({ id: makeId(), type: 'inventory' as const, title: 'Inventory updated', description: `${i.product} −${i.quantity} ${i.unit}`, date: new Date() })),
-        ...(sale.received > 0 ? [{ id: makeId(), type: 'payment' as const, title: 'Payment recorded', description: `₹${sale.received} received from ${sale.customer}`, date: new Date() }] : []),
-        ...(sale.outstanding > 0 ? [{ id: makeId(), type: 'khata' as const, title: 'Khata updated', description: `${sale.customer} has ₹${sale.outstanding + (s.customers.find(c => c.name.toLowerCase() === sale.customer.toLowerCase())?.balance || 0)} outstanding`, date: new Date() }] : []),
-      ];
-      return {
+  const refreshData = useCallback(async () => {
+    if (!isAuthenticated) return;
+    setState(s => ({ ...s, loadingData: true }));
+    try {
+      const [prods, salesList, custs] = await Promise.all([
+        productsApi.getProducts().catch(() => []),
+        salesApi.getSales().catch(() => []),
+        customersApi.getCustomers(false).catch(() => []),
+      ]);
+
+      const mappedProducts: Product[] = prods.map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        quantity: Number(p.quantity),
+        unit: p.unit,
+        price: Number(p.price),
+        minStock: Number(p.minStock),
+        history: [],
+      }));
+
+      const mappedSales: Sale[] = salesList.map(s => ({
+        id: s.id,
+        customer: s.customerName,
+        items: s.items.map(i => ({
+          product: i.productName,
+          quantity: Number(i.quantity),
+          unit: i.unit,
+          price: Number(i.unitPrice),
+          total: Number(i.totalPrice),
+        })),
+        total: Number(s.totalAmount),
+        received: Number(s.receivedAmount),
+        outstanding: Number(s.outstandingAmount),
+        status: s.status.toLowerCase() as 'paid' | 'partial' | 'credit',
+        paymentMode: (s.paymentMode.toLowerCase() === 'upi' ? 'upi' : 'cash') as 'cash' | 'upi' | 'card',
+        date: new Date(s.createdAt),
+      }));
+
+      const mappedCustomers: Customer[] = custs.map(c => ({
+        id: c.id,
+        name: c.name,
+        phone: c.phone,
+        balance: Number(c.balance),
+        transactions: [],
+      }));
+
+      const activities: ActivityEntry[] = mappedSales.slice(0, 8).map(s => ({
+        id: 'act_' + s.id,
+        type: 'sale' as const,
+        title: 'Sale recorded',
+        description: `${s.customer} purchased ${s.items.map(i => `${i.quantity} ${i.unit} ${i.product}`).join(', ')}`,
+        date: s.date,
+      }));
+
+      setState(s => ({
         ...s,
-        sales: [newSale, ...s.sales],
-        products: newProducts,
-        customers: newCustomers,
-        activity: [...newActivity, ...s.activity],
-        selectedSaleId: newSale.id,
+        products: mappedProducts,
+        sales: mappedSales,
+        customers: mappedCustomers,
+        activity: activities,
+        loadingData: false,
+      }));
+    } catch (err) {
+      console.error('Failed to load shop data from backend:', err);
+      setState(s => ({ ...s, loadingData: false }));
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  const navigate = useCallback((page: Page, params?: Partial<AppState>) => {
+    setState(s => ({ ...s, page, ...params }));
+  }, []);
+
+  const addSale = useCallback(async (sale: Omit<Sale, 'id' | 'date'>) => {
+    try {
+      const payload = {
+        customerName: sale.customer,
+        items: sale.items.map(i => ({
+          productName: i.product,
+          quantity: i.quantity,
+          unit: i.unit,
+          unitPrice: i.price,
+        })),
+        receivedAmount: sale.received,
+        paymentMode: sale.paymentMode.toUpperCase(),
       };
-    });
-    return newSale as Sale;
-  }, []);
 
-  const addProduct = useCallback((product: Omit<Product, 'id' | 'history'>) => {
-    const newProduct: Product = {
-      ...product,
-      id: makeId(),
-      history: [{ id: makeId(), type: 'in', quantity: product.quantity, reason: 'Initial stock', date: new Date() }],
-    };
-    setState(s => ({
-      ...s,
-      products: [...s.products, newProduct],
-      activity: [{ id: makeId(), type: 'inventory', title: 'Product added', description: `${product.name} — ${product.quantity} ${product.unit}`, date: new Date() }, ...s.activity],
-    }));
-  }, []);
+      const backendSale = await salesApi.createSale(payload);
 
-  const updateProduct = useCallback((id: string, updates: Partial<Product>) => {
-    setState(s => ({ ...s, products: s.products.map(p => p.id === id ? { ...p, ...updates } : p) }));
-  }, []);
+      const newSale: Sale = {
+        id: backendSale.id,
+        customer: backendSale.customerName,
+        items: backendSale.items.map(i => ({
+          product: i.productName,
+          quantity: Number(i.quantity),
+          unit: i.unit,
+          price: Number(i.unitPrice),
+          total: Number(i.totalPrice),
+        })),
+        total: Number(backendSale.totalAmount),
+        received: Number(backendSale.receivedAmount),
+        outstanding: Number(backendSale.outstandingAmount),
+        status: backendSale.status.toLowerCase() as 'paid' | 'partial' | 'credit',
+        paymentMode: (backendSale.paymentMode.toLowerCase() === 'upi' ? 'upi' : 'cash') as any,
+        date: new Date(backendSale.createdAt),
+      };
 
-  const addStockHistory = useCallback((productId: string, event: Omit<StockEvent, 'id'>) => {
-    setState(s => ({
-      ...s,
-      products: s.products.map(p => {
-        if (p.id !== productId) return p;
-        const newQty = event.type === 'in' ? p.quantity + event.quantity : Math.max(0, p.quantity - event.quantity);
-        return { ...p, quantity: newQty, history: [...p.history, { ...event, id: makeId() }] };
-      }),
-      activity: [{ id: makeId(), type: 'inventory', title: 'Stock updated', description: `${s.products.find(p => p.id === productId)?.name} +${event.quantity}`, date: new Date() }, ...s.activity],
-    }));
-  }, []);
+      await refreshData();
+      showToast('success', `Sale recorded for ${newSale.customer} (₹${newSale.total})`);
+      return newSale;
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Failed to record sale';
+      showToast('error', msg);
+      throw err;
+    }
+  }, [refreshData, showToast]);
 
-  const addCustomer = useCallback((name: string, phone?: string) => {
-    setState(s => ({
-      ...s,
-      customers: [...s.customers, { id: makeId(), name, phone, balance: 0, transactions: [] }],
-    }));
-  }, []);
-
-  const recordPayment = useCallback((customerId: string, amount: number, mode: string) => {
-    setState(s => {
-      const customer = s.customers.find(c => c.id === customerId);
-      if (!customer) return s;
-      const newCustomers = s.customers.map(c => {
-        if (c.id !== customerId) return c;
-        return {
-          ...c,
-          balance: Math.max(0, c.balance - amount),
-          transactions: [...c.transactions, { id: makeId(), type: 'debit' as const, amount, note: `Payment received (${mode})`, date: new Date() }],
-        };
+  const addProduct = useCallback(async (product: Omit<Product, 'id' | 'history'>) => {
+    try {
+      await productsApi.createProduct({
+        name: product.name,
+        category: product.category,
+        quantity: product.quantity,
+        unit: product.unit,
+        price: product.price,
+        minStock: product.minStock,
       });
-      return {
-        ...s,
-        customers: newCustomers,
-        activity: [
-          { id: makeId(), type: 'payment', title: 'Payment recorded', description: `₹${amount} received from ${customer.name}`, date: new Date() },
-          { id: makeId(), type: 'khata', title: 'Khata updated', description: `${customer.name} — new balance ₹${Math.max(0, customer.balance - amount)}`, date: new Date() },
-          ...s.activity,
-        ],
-      };
-    });
-  }, []);
+      await refreshData();
+      showToast('success', `${product.name} added to inventory`);
+    } catch (err: any) {
+      showToast('error', err.response?.data?.message || 'Failed to add product');
+    }
+  }, [refreshData, showToast]);
+
+  const updateProduct = useCallback(async (id: string, updates: Partial<Product>) => {
+    try {
+      const existing = state.products.find(p => p.id === id);
+      if (!existing) return;
+      await productsApi.updateProduct(id, {
+        name: updates.name || existing.name,
+        category: updates.category || existing.category,
+        quantity: updates.quantity !== undefined ? updates.quantity : existing.quantity,
+        unit: updates.unit || existing.unit,
+        price: updates.price !== undefined ? updates.price : existing.price,
+        minStock: updates.minStock !== undefined ? updates.minStock : existing.minStock,
+      });
+      await refreshData();
+      showToast('success', 'Product updated');
+    } catch (err: any) {
+      showToast('error', err.response?.data?.message || 'Failed to update product');
+    }
+  }, [state.products, refreshData, showToast]);
+
+  const addStockHistory = useCallback(async (productId: string, event: Omit<StockEvent, 'id'>) => {
+    try {
+      await productsApi.adjustStock(productId, {
+        quantityDelta: event.quantity,
+        type: event.type.toUpperCase() as 'IN' | 'OUT',
+        reason: event.reason,
+      });
+      await refreshData();
+      showToast('success', `Stock updated: ${event.type === 'in' ? '+' : '-'}${event.quantity}`);
+    } catch (err: any) {
+      showToast('error', err.response?.data?.message || 'Failed to adjust stock');
+    }
+  }, [refreshData, showToast]);
+
+  const addCustomer = useCallback(async (name: string, phone?: string) => {
+    try {
+      await customersApi.createCustomer({ name, phone });
+      await refreshData();
+      showToast('success', `Customer ${name} added`);
+    } catch (err: any) {
+      showToast('error', err.response?.data?.message || 'Failed to add customer');
+    }
+  }, [refreshData, showToast]);
+
+  const recordPayment = useCallback(async (customerId: string, amount: number, mode: string) => {
+    try {
+      await customersApi.recordPayment(customerId, {
+        amount,
+        paymentMode: mode.toUpperCase(),
+        note: `Payment received (${mode})`,
+      });
+      await refreshData();
+      showToast('success', `₹${amount} payment recorded`);
+    } catch (err: any) {
+      showToast('error', err.response?.data?.message || 'Failed to record payment');
+    }
+  }, [refreshData, showToast]);
 
   const setSearchOpen = useCallback((open: boolean) => {
     setState(s => ({ ...s, searchOpen: open }));
@@ -471,6 +366,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       showToast,
       dismissToast,
       setSearchOpen,
+      refreshData,
     }}>
       {children}
     </AppContext.Provider>
@@ -484,10 +380,11 @@ export function useApp() {
 }
 
 export function fmt(n: number) {
-  return '₹' + n.toLocaleString('en-IN');
+  return '₹' + (n || 0).toLocaleString('en-IN');
 }
 
 export function fmtDate(d: Date) {
+  if (!d || isNaN(d.getTime())) return '';
   const now = new Date();
   const diff = now.getTime() - d.getTime();
   const hours = diff / 3600000;

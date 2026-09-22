@@ -1,106 +1,141 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { SectionHeader, Input, Button, Card, Divider } from '../components/ui';
+import { useAuth } from '../context/AuthContext';
+import { useApp } from '../store';
+import { useTranslation } from 'react-i18next';
+import { SUPPORTED_LANGUAGES, LangCode } from '../i18n/i18n';
 
 export default function Settings() {
-  const [lang, setLang] = useState('en');
-  const [shopName, setShopName] = useState("Ravi's Kirana Store");
-  const [ownerName, setOwnerName] = useState('Ravi Kumar');
-  const [phone, setPhone] = useState('98765 43210');
+  const { user, logout } = useAuth();
+  const { navigate, showToast } = useApp();
+  const { t, i18n } = useTranslation();
+
+  const [shopName, setShopName] = useState(user?.shopName || '');
+  const [ownerName, setOwnerName] = useState(user?.fullName || '');
+  const [email] = useState(user?.email || '');
+  const [lang, setLang] = useState<LangCode>((i18n.language?.split('-')[0] as LangCode) || 'en');
   const [lowStockNotif, setLowStockNotif] = useState(true);
   const [paymentNotif, setPaymentNotif] = useState(true);
   const [khataNotif, setKhataNotif] = useState(true);
   const [saved, setSaved] = useState(false);
 
+  function handleLangChange(code: LangCode) {
+    setLang(code);
+    i18n.changeLanguage(code);
+    // Persisted automatically via i18next-browser-languagedetector localStorage cache
+  }
+
   function handleSave() {
     setSaved(true);
+    showToast('success', t('settings.saved'));
     setTimeout(() => setSaved(false), 2000);
   }
 
   return (
-    <div className="max-w-[680px] mx-auto p-6 flex flex-col gap-6">
-      <SectionHeader title="Settings" />
+    <div className="max-w-[720px] mx-auto p-6 flex flex-col gap-6">
+      <SectionHeader title={t('settings.title')} />
 
-      {/* Shop */}
+      {/* Shop Profile */}
       <div>
-        <h2 className="text-base font-semibold text-[#374151] mb-3">Shop</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-2">{t('settings.storeProfile')}</h2>
         <Card padding="md" className="space-y-4">
-          <Input label="Shop name" value={shopName} onChange={e => setShopName(e.target.value)} />
-          <Input label="Owner name" value={ownerName} onChange={e => setOwnerName(e.target.value)} />
-          <Input label="Phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-[#374151]">Address</label>
-            <textarea
-              rows={2}
-              placeholder="Shop address…"
-              className="border border-[#E5E7EB] rounded-[10px] px-3 py-2.5 text-sm text-[#111827] placeholder-[#9CA3AF] resize-none focus:outline-none focus:border-[#4338CA] focus:ring-2 focus:ring-[#EEF2FF]"
-            />
-          </div>
+          <Input
+            label={t('settings.shopName')}
+            value={shopName}
+            onChange={e => setShopName(e.target.value)}
+            placeholder="Your Store Name"
+          />
+          <Input
+            label={t('settings.ownerName')}
+            value={ownerName}
+            onChange={e => setOwnerName(e.target.value)}
+            placeholder="Owner Full Name"
+          />
+          <Input
+            label={t('settings.email')}
+            value={email}
+            disabled
+            className="bg-[#F8F9FA] text-[#64748B] cursor-not-allowed"
+          />
         </Card>
       </div>
 
-      {/* Preferences */}
+      {/* Preferences & AI Settings */}
       <div>
-        <h2 className="text-base font-semibold text-[#374151] mb-3">Preferences</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-2">{t('settings.aiLocalization')}</h2>
         <Card padding="md" className="space-y-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-[#374151]">Language</label>
-            <div className="flex gap-2">
-              {[['en', 'English'], ['te', 'తెలుగు'], ['hi', 'हिन्दी']].map(([id, label]) => (
+            <label className="text-xs font-medium text-[#334155]">{t('settings.interfaceLanguage')}</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {SUPPORTED_LANGUAGES.map(({ code, nativeLabel }) => (
                 <button
-                  key={id}
-                  onClick={() => setLang(id)}
-                  className={`flex-1 py-2 rounded-[8px] text-sm font-medium border transition-colors cursor-pointer
-                    ${lang === id ? 'bg-[#4338CA] text-white border-[#4338CA]' : 'bg-white text-[#374151] border-[#E5E7EB] hover:border-[#C7D2FE]'}`}
+                  key={code}
+                  onClick={() => handleLangChange(code as LangCode)}
+                  type="button"
+                  className={`py-2 px-3 rounded-[6px] text-xs font-medium border transition-colors cursor-pointer ${
+                    lang === code
+                      ? 'bg-[#1E40AF] text-white border-[#1E40AF]'
+                      : 'bg-white text-[#334155] border-[#E2E8F0] hover:border-[#BFDBFE]'
+                  }`}
                 >
-                  {label}
+                  {nativeLabel}
                 </button>
               ))}
             </div>
-            <p className="text-xs text-[#9CA3AF]">You can speak naturally in your preferred language.</p>
+            <p className="text-[11px] text-[#94A3B8]">{t('settings.languageNote')}</p>
           </div>
+
           <Divider />
+
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#374151]">Currency</p>
-              <p className="text-xs text-[#9CA3AF]">Used for all monetary displays</p>
+              <p className="text-sm font-medium text-[#0F172A]">{t('settings.currency')}</p>
+              <p className="text-xs text-[#64748B]">{t('settings.currencyNote')}</p>
             </div>
-            <span className="text-sm font-semibold text-[#374151] bg-[#F3F4F6] px-3 py-1.5 rounded-[8px]">₹ INR</span>
+            <span className="text-xs font-semibold text-[#0F172A] bg-[#F8F9FA] border border-[#E2E8F0] px-3 py-1 rounded-[6px]">
+              {t('settings.currencyValue')}
+            </span>
           </div>
+
           <Divider />
+
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#374151]">Confirmation before saving</p>
-              <p className="text-xs text-[#9CA3AF]">Always review AI results before they update your data</p>
+              <p className="text-sm font-medium text-[#0F172A]">{t('settings.aiVerification')}</p>
+              <p className="text-xs text-[#64748B]">{t('settings.aiVerificationNote')}</p>
             </div>
-            <div className="w-10 h-5.5 rounded-full bg-[#4338CA] flex items-center pl-0.5 cursor-pointer" style={{ height: 22 }}>
-              <div className="w-4 h-4 rounded-full bg-white ml-5" />
-            </div>
+            <span className="text-xs font-semibold text-[#15803D] bg-[#DCFCE7] border border-[#BBF7D0] px-2.5 py-0.5 rounded-full">
+              {t('settings.aiVerificationStatus')}
+            </span>
           </div>
         </Card>
       </div>
 
       {/* Notifications */}
       <div>
-        <h2 className="text-base font-semibold text-[#374151] mb-3">Notifications</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-2">{t('settings.notifications')}</h2>
         <Card padding="md" className="space-y-1">
           {[
-            { label: 'Low stock alerts', sub: 'When a product falls below minimum stock', value: lowStockNotif, set: setLowStockNotif },
-            { label: 'Payment updates', sub: 'When payments are received or partially paid', value: paymentNotif, set: setPaymentNotif },
-            { label: 'Khata reminders', sub: 'When customers have high outstanding balances', value: khataNotif, set: setKhataNotif },
+            { label: t('settings.notifLowStock'), sub: t('settings.notifLowStockDesc'), value: lowStockNotif, set: setLowStockNotif },
+            { label: t('settings.notifPayment'), sub: t('settings.notifPaymentDesc'), value: paymentNotif, set: setPaymentNotif },
+            { label: t('settings.notifKhata'), sub: t('settings.notifKhataDesc'), value: khataNotif, set: setKhataNotif },
           ].map(n => (
-            <div key={n.label} className="flex items-center justify-between py-3 border-b border-[#F3F4F6] last:border-0">
+            <div key={n.label} className="flex items-center justify-between py-3 border-b border-[#F1F5F9] last:border-0">
               <div>
-                <p className="text-sm font-medium text-[#374151]">{n.label}</p>
-                <p className="text-xs text-[#9CA3AF]">{n.sub}</p>
+                <p className="text-sm font-medium text-[#0F172A]">{n.label}</p>
+                <p className="text-xs text-[#64748B]">{n.sub}</p>
               </div>
               <button
+                type="button"
                 onClick={() => n.set(!n.value)}
-                className={`relative w-10 rounded-full transition-colors cursor-pointer flex-shrink-0`}
-                style={{ height: 22, background: n.value ? '#4338CA' : '#D1D5DB' }}
+                className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer flex-shrink-0 ${
+                  n.value ? 'bg-[#1E40AF]' : 'bg-[#E2E8F0]'
+                }`}
               >
-                <div
-                  className="absolute top-0.5 w-4.5 h-4.5 rounded-full bg-white shadow transition-all"
-                  style={{ width: 18, height: 18, left: n.value ? 'calc(100% - 20px)' : '2px', top: 2 }}
+                <span
+                  className={`block w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    n.value ? 'translate-x-5.5' : 'translate-x-1'
+                  }`}
                 />
               </button>
             </div>
@@ -108,25 +143,49 @@ export default function Settings() {
         </Card>
       </div>
 
-      {/* Account */}
+      {/* Legal & Compliance */}
       <div>
-        <h2 className="text-base font-semibold text-[#374151] mb-3">Account</h2>
-        <Card padding="md" className="space-y-2">
-          <div className="flex items-center gap-3 pb-3 border-b border-[#F3F4F6]">
-            <div className="w-12 h-12 rounded-full bg-[#4338CA] flex items-center justify-center text-white font-semibold text-base">RK</div>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-2">{t('settings.legal')}</h2>
+        <Card padding="md" className="space-y-3">
+          <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#111827]">{ownerName}</p>
-              <p className="text-xs text-[#9CA3AF]">Owner · {shopName}</p>
+              <p className="text-sm font-medium text-[#0F172A]">{t('settings.termsOfService')}</p>
+              <p className="text-xs text-[#64748B]">{t('settings.termsDesc')}</p>
             </div>
+            <button
+              type="button"
+              onClick={() => navigate('terms-of-service')}
+              className="text-xs font-semibold text-[#1E40AF] hover:text-[#1D4ED8] hover:underline cursor-pointer"
+            >
+              {t('settings.viewTerms')}
+            </button>
           </div>
-          <button className="w-full text-left px-2 py-2.5 text-sm text-[#374151] hover:text-[#4338CA] transition-colors rounded-[8px] hover:bg-[#F7F8FA]">Change password →</button>
-          <button className="w-full text-left px-2 py-2.5 text-sm text-[#DC2626] hover:bg-[#FEF2F2] transition-colors rounded-[8px]">Log out</button>
+
+          <Divider />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-[#0F172A]">{t('settings.privacyPolicy')}</p>
+              <p className="text-xs text-[#64748B]">{t('settings.privacyDesc')}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('privacy-policy')}
+              className="text-xs font-semibold text-[#1E40AF] hover:text-[#1D4ED8] hover:underline cursor-pointer"
+            >
+              {t('settings.viewPrivacy')}
+            </button>
+          </div>
         </Card>
       </div>
 
-      <div className="flex justify-end pb-8">
-        <Button onClick={handleSave} variant={saved ? 'success' : 'primary'}>
-          {saved ? '✓ Saved' : 'Save changes'}
+      {/* Account Actions */}
+      <div className="flex items-center justify-between pt-2">
+        <Button variant="secondary" size="sm" onClick={logout} className="text-[#DC2626] hover:bg-[#FEE2E2] border-[#E2E8F0]">
+          {t('settings.signOut')}
+        </Button>
+        <Button variant="primary" size="sm" onClick={handleSave}>
+          {saved ? t('settings.saved') : t('settings.savePreferences')}
         </Button>
       </div>
     </div>

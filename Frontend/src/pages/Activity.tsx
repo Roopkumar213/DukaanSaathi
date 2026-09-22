@@ -5,10 +5,10 @@ import { SectionHeader, Tabs, EmptyState } from '../components/ui';
 type ActivityFilter = 'all' | 'sale' | 'inventory' | 'payment' | 'khata';
 
 const typeConfig = {
-  sale: { label: 'Sale', color: 'bg-[#EEF2FF] text-[#4338CA]', dot: 'bg-[#4338CA]' },
-  inventory: { label: 'Inventory', color: 'bg-[#DCFCE7] text-[#16A34A]', dot: 'bg-[#16A34A]' },
-  payment: { label: 'Payment', color: 'bg-[#F0FDF4] text-[#15803D]', dot: 'bg-[#16A34A]' },
-  khata: { label: 'Khata', color: 'bg-[#FEF3C7] text-[#B45309]', dot: 'bg-[#D97706]' },
+  sale: { label: 'Sale', color: 'bg-[#EFF6FF] text-[#1E40AF]', dot: 'bg-[#1E40AF]' },
+  inventory: { label: 'Inventory', color: 'bg-[#DCFCE7] text-[#15803D]', dot: 'bg-[#15803D]' },
+  payment: { label: 'Payment', color: 'bg-[#DCFCE7] text-[#15803D]', dot: 'bg-[#15803D]' },
+  khata: { label: 'Khata', color: 'bg-[#FEF3C7] text-[#B45309]', dot: 'bg-[#B45309]' },
 };
 
 export default function Activity() {
@@ -42,7 +42,7 @@ export default function Activity() {
       ) : (
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-[22px] top-0 bottom-0 w-px bg-[#E5E7EB]" />
+          <div className="absolute left-[22px] top-0 bottom-0 w-px bg-[#E2E8F0]" />
           <div className="flex flex-col gap-0">
             {filtered.map((entry, i) => {
               const cfg = typeConfig[entry.type];
@@ -52,22 +52,22 @@ export default function Activity() {
                   {showDate && (
                     <div className="flex items-center gap-3 mb-3 mt-4 first:mt-0 relative">
                       <div className="w-11 flex-shrink-0" />
-                      <span className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wide">{fmtDate(entry.date)}</span>
+                      <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">{fmtDate(entry.date)}</span>
                     </div>
                   )}
                   <div className="flex gap-3 items-start mb-2 relative">
                     <div className="w-11 flex-shrink-0 flex items-center justify-center pt-3">
                       <div className={`w-2.5 h-2.5 rounded-full ${cfg.dot} ring-2 ring-white flex-shrink-0`} />
                     </div>
-                    <div className="flex-1 bg-white border border-[#E5E7EB] rounded-[12px] px-4 py-3">
+                    <div className="flex-1 bg-white border border-[#E2E8F0] rounded-[8px] px-4 py-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${cfg.color}`}>{cfg.label}</span>
-                          <p className="text-sm font-medium text-[#111827]">{entry.title}</p>
+                          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-[4px] ${cfg.color}`}>{cfg.label}</span>
+                          <p className="text-sm font-semibold text-[#0F172A]">{entry.title}</p>
                         </div>
-                        <span className="text-xs text-[#9CA3AF] flex-shrink-0">{entry.date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className="text-xs text-[#94A3B8] flex-shrink-0">{entry.date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
-                      <p className="text-sm text-[#6B7280] mt-0.5">{entry.description}</p>
+                      <p className="text-sm text-[#475569] mt-1">{entry.description}</p>
                     </div>
                   </div>
                 </div>

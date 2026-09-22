@@ -28,10 +28,10 @@ export default function SearchOverlay() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4" onClick={() => setSearchOpen(false)}>
-      <div className="absolute inset-0 bg-black/25 backdrop-blur-[3px] animate-fade-in" />
-      <div className="relative bg-white rounded-[16px] w-full max-w-[540px] shadow-xl animate-slide-up overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#E5E7EB]">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-[#9CA3AF] flex-shrink-0">
+      <div className="absolute inset-0 bg-black/30 animate-fade-in" />
+      <div className="relative bg-white rounded-[10px] w-full max-w-[540px] shadow-md border border-[#E2E8F0] animate-slide-up overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#E2E8F0]">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-[#94A3B8] flex-shrink-0">
             <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5"/>
             <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
@@ -40,18 +40,18 @@ export default function SearchOverlay() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search products, customers or sales…"
-            className="flex-1 text-sm text-[#111827] bg-transparent outline-none placeholder-[#9CA3AF]"
+            className="flex-1 text-sm text-[#0F172A] bg-transparent outline-none placeholder-[#94A3B8]"
           />
-          <button onClick={() => setSearchOpen(false)} className="text-xs text-[#9CA3AF] border border-[#E5E7EB] rounded-[5px] px-1.5 py-0.5">Esc</button>
+          <button onClick={() => setSearchOpen(false)} className="text-xs text-[#94A3B8] border border-[#E2E8F0] rounded-[5px] px-1.5 py-0.5 hover:border-[#CBD5E1] transition-colors">Esc</button>
         </div>
 
         {!q && (
           <div className="p-4">
-            <p className="text-xs text-[#9CA3AF] font-medium uppercase tracking-wide mb-3">Ask DukaanAI</p>
+            <p className="text-xs text-[#64748B] font-medium uppercase tracking-wide mb-3">Ask DukaanAI</p>
             <div className="flex flex-wrap gap-2">
               {['How much rice is left?', 'Who owes me money?', 'Today\'s sales total?'].map(s => (
                 <button key={s} onClick={() => { setSearchOpen(false); navigate('ai-assistant'); }}
-                  className="px-3 py-1.5 rounded-full text-sm text-[#4338CA] bg-[#EEF2FF] hover:bg-[#E0E7FF] transition-colors">
+                  className="px-3 py-1.5 rounded-[6px] text-sm text-[#1E40AF] bg-[#EFF6FF] border border-[#BFDBFE] hover:bg-[#DBEAFE] transition-colors cursor-pointer">
                   {s}
                 </button>
               ))}
@@ -60,45 +60,45 @@ export default function SearchOverlay() {
         )}
 
         {q && (
-          <div className="max-h-80 overflow-y-auto divide-y divide-[#F3F4F6]">
+          <div className="max-h-80 overflow-y-auto divide-y divide-[#F1F5F9]">
             {matchedProducts.length > 0 && (
               <div className="p-3">
-                <p className="text-xs text-[#9CA3AF] font-medium px-2 mb-2">Products</p>
+                <p className="text-xs text-[#64748B] font-medium px-2 mb-2">Products</p>
                 {matchedProducts.map(p => (
                   <button key={p.id} onClick={() => { setSearchOpen(false); navigate('product-detail', { selectedProductId: p.id }); }}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-[8px] hover:bg-[#F7F8FA] transition-colors text-left">
-                    <span className="text-sm text-[#111827]">{p.name}</span>
-                    <span className="text-xs text-[#6B7280]">{p.quantity} {p.unit}</span>
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-[6px] hover:bg-[#F8F9FA] transition-colors text-left cursor-pointer">
+                    <span className="text-sm font-medium text-[#0F172A]">{p.name}</span>
+                    <span className="text-xs text-[#64748B]">{p.quantity} {p.unit}</span>
                   </button>
                 ))}
               </div>
             )}
             {matchedCustomers.length > 0 && (
               <div className="p-3">
-                <p className="text-xs text-[#9CA3AF] font-medium px-2 mb-2">Customers</p>
+                <p className="text-xs text-[#64748B] font-medium px-2 mb-2">Customers</p>
                 {matchedCustomers.map(c => (
                   <button key={c.id} onClick={() => { setSearchOpen(false); navigate('customer-detail', { selectedCustomerId: c.id }); }}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-[8px] hover:bg-[#F7F8FA] transition-colors text-left">
-                    <span className="text-sm text-[#111827]">{c.name}</span>
-                    {c.balance > 0 && <span className="text-xs text-[#D97706]">₹{c.balance} outstanding</span>}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-[6px] hover:bg-[#F8F9FA] transition-colors text-left cursor-pointer">
+                    <span className="text-sm font-medium text-[#0F172A]">{c.name}</span>
+                    {c.balance > 0 && <span className="text-xs font-semibold text-[#B45309]">₹{c.balance} outstanding</span>}
                   </button>
                 ))}
               </div>
             )}
             {matchedSales.length > 0 && (
               <div className="p-3">
-                <p className="text-xs text-[#9CA3AF] font-medium px-2 mb-2">Sales</p>
+                <p className="text-xs text-[#64748B] font-medium px-2 mb-2">Sales</p>
                 {matchedSales.map(s => (
                   <button key={s.id} onClick={() => { setSearchOpen(false); navigate('sale-detail', { selectedSaleId: s.id }); }}
-                    className="w-full flex items-center justify-between px-3 py-2 rounded-[8px] hover:bg-[#F7F8FA] transition-colors text-left">
-                    <span className="text-sm text-[#111827]">{s.id} — {s.customer}</span>
-                    <span className="text-xs text-[#6B7280]">₹{s.total}</span>
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-[6px] hover:bg-[#F8F9FA] transition-colors text-left cursor-pointer">
+                    <span className="text-sm font-medium text-[#0F172A]">{s.id} — {s.customer}</span>
+                    <span className="text-xs font-semibold text-[#0F172A]">₹{s.total}</span>
                   </button>
                 ))}
               </div>
             )}
             {matchedProducts.length === 0 && matchedCustomers.length === 0 && matchedSales.length === 0 && (
-              <div className="p-8 text-center text-sm text-[#9CA3AF]">No results for "{query}"</div>
+              <div className="p-8 text-center text-sm text-[#94A3B8]">No results for "{query}"</div>
             )}
           </div>
         )}

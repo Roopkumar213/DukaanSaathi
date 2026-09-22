@@ -1,35 +1,42 @@
-# figma-make-app
+# DukaanAI Frontend
 
-React + Vite + Tailwind CSS project running inside Figma Make.
+A clean, modern React 19 + TypeScript + Vite + Tailwind CSS v4 web application designed for small Indian retailers (kirana stores) to manage billing, inventory, khata credit ledger, payments, and AI-assisted queries.
 
-## Development Server
+## Development Commands
 
-A Vite development server is **already running** on `$PORT` (default 8443). You don't need to start it manually.
+```bash
+# Install dependencies
+npm install
 
-- Preview URL: The user can access the running app through the preview panel
-- Hot reload: Changes to source files are reflected immediately
+# Start local dev server (default: http://localhost:5173)
+npm run dev
 
-## Project Structure
+# Type check & build for production
+npm run build
 
-This is the canonical project structure. Start with task-relevant files below. Only follow imports or inspect other files when required, when a documented path is missing, or when the repository contradicts this guide.
+# Preview production build locally
+npm run preview
+```
 
-- `src/main.tsx` - React entrypoint; imports `src/index.css` and mounts `src/App.tsx` into the `#root` element
-- `src/App.tsx` - Primary application component and the usual starting point for UI work
-- `src/index.css` - Global CSS entrypoint and Tailwind CSS v4 import
-- `index.html` - Vite HTML shell containing the `#root` element and loading `src/main.tsx`
-- `package.json` - Project dependencies and the Vite build, development, preview, and formatting scripts
-- `vite.config.ts` - Vite configuration with React, Tailwind CSS v4, and Figma Make plugins plus the `@` alias for `src`
-- `.mise.toml` - Toolchain versions for Node.js and pnpm
+## Architecture & Project Structure
 
-## Dependencies
-
-- Runtime: React 19 and React DOM 19
-- Styling: Tailwind CSS v4 with the `@tailwindcss/vite` plugin
-- Build tooling: Vite 8, TypeScript 5.7, and `@vitejs/plugin-react`
-- Formatting: oxfmt
-
-## Styling
-
-This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin configured in `vite.config.ts`. `src/index.css` imports Tailwind with `@import 'tailwindcss';`. Use Tailwind utility classes directly in JSX and put global CSS or Tailwind v4 theme customization in `src/index.css`. This scaffold does not need a Tailwind config file or PostCSS config.
-
-`src/main.tsx` imports `src/index.css`, so global font wiring belongs in `src/index.css`. Keep CSS `@import` statements first, then add any `@font-face` rules and font-family defaults there.
+- `src/main.tsx` - Application entrypoint mounting `App.tsx`
+- `src/App.tsx` - App layout with Sidebar, Header, SearchOverlay, Toast notifications, and dynamic page routing
+- `src/store.tsx` - Centralized React state management (products, customers, khata balances, sales, transactions, activity logs, AI assistant state)
+- `src/index.css` - Tailwind CSS v4 styling, custom CSS tokens, typography, and micro-animation keyframes
+- `src/components/`
+  - `Header.tsx` - Top bar with page title, search shortcut (⌘K), and notification badges
+  - `Sidebar.tsx` - Navigation drawer with shop branding, sync status, and section tabs
+  - `SearchOverlay.tsx` - Instant global search across products, khata customers, and transactions
+  - `Toast.tsx` - Feedback notifications
+  - `ui.tsx` - Modular design system (Button, Badge, StatusBadge, KPICard, Card, Modal, Input, Tabs)
+- `src/pages/`
+  - `Dashboard.tsx` - Overview metrics (Daily revenue, outstanding credit, low stock alerts, quick actions)
+  - `Sales.tsx` - New bill creation, item entry, receipt generation, payment recording
+  - `SaleDetail.tsx` - Detailed receipt breakdown with share/print actions
+  - `Inventory.tsx` - Stock listing, low stock alerts, bulk updates, product addition
+  - `Khata.tsx` - Digital ledger for customer credit, debt collection reminders, transaction history
+  - `Payments.tsx` - Daily settlement tracking, UPI vs Cash analytics
+  - `AIAssistant.tsx` - Shop AI bot answering inventory, outstanding debts, sales metrics, and voice input
+  - `Activity.tsx` - Chronological audit log of shop operations
+  - `Settings.tsx` - Store profile, currency formatting, preferences

@@ -1,35 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  --color-bg: #F7F8FA;
+  /* Background & Surface */
+  --color-bg: #F8F9FA;
   --color-card: #FFFFFF;
-  --color-primary: #4338CA;
-  --color-primary-hover: #3730A3;
-  --color-primary-light: #EEF2FF;
-  --color-primary-muted: #C7D2FE;
-  --color-success: #16A34A;
+
+  /* Primary brand: deep navy blue — trustworthy, business-like */
+  --color-primary: #1E40AF;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-light: #EFF6FF;
+  --color-primary-muted: #BFDBFE;
+
+  /* Semantic colours */
+  --color-success: #15803D;
   --color-success-light: #DCFCE7;
-  --color-warning: #D97706;
+  --color-warning: #B45309;
   --color-warning-light: #FEF3C7;
-  --color-error: #DC2626;
+  --color-error: #B91C1C;
   --color-error-light: #FEE2E2;
-  --color-text: #111827;
-  --color-text-secondary: #6B7280;
-  --color-border: #E5E7EB;
-  --color-border-strong: #D1D5DB;
-  --color-sidebar: #1E1B4B;
-  --color-sidebar-hover: #2D2A5E;
-  --color-sidebar-active: #312E81;
-  --color-sidebar-text: #C7D2FE;
+
+  /* Typography */
+  --color-text: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748B;
+
+  /* Borders */
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Sidebar: dark charcoal, not purple */
+  --color-sidebar: #0F172A;
+  --color-sidebar-hover: #1E293B;
+  --color-sidebar-active: #1E3A5F;
+  --color-sidebar-text: #94A3B8;
   --color-sidebar-text-active: #FFFFFF;
 
+  /* Radii */
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 }
 
 * {
@@ -38,72 +51,74 @@
 
 html, body, #root {
   height: 100%;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  background: #F7F8FA;
-  color: #111827;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background: #F8F9FA;
+  color: #0F172A;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* ── Custom scrollbar ─────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
 
-/* Listening pulse animation */
-@keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.5); opacity: 0; }
-}
-
-@keyframes dots {
-  0%, 80%, 100% { opacity: 0; transform: scale(0.8); }
-  40% { opacity: 1; transform: scale(1); }
-}
-
+/* ── Keyframes ─────────────────────────────────────────────────────────────── */
 @keyframes slideUp {
   from { transform: translateY(8px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(0);   opacity: 1; }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 @keyframes toastIn {
   from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dots {
+  0%, 80%, 100% { opacity: 0; transform: scale(0.8); }
+  40%           { opacity: 1; transform: scale(1); }
 }
 
 @keyframes wave {
   0%, 100% { height: 4px; }
-  50% { height: 20px; }
+  50%       { height: 20px; }
 }
 
-.animate-slide-up { animation: slideUp 0.2s ease-out; }
-.animate-fade-in { animation: fadeIn 0.2s ease-out; }
-.animate-toast-in { animation: toastIn 0.3s ease-out; }
-
-.pulse-ring::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  background: rgba(79, 70, 229, 0.3);
-  animation: pulse-ring 1.4s ease-out infinite;
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.pulse-ring::after {
-  content: '';
-  position: absolute;
-  inset: -16px;
-  border-radius: 50%;
-  background: rgba(79, 70, 229, 0.15);
-  animation: pulse-ring 1.4s ease-out 0.4s infinite;
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0;   }
 }
 
-.dot-1 { animation: dots 1.4s ease-in-out 0s infinite; }
+@keyframes scanLaser {
+  0%   { top: 2%; opacity: 0.8; }
+  50%  { top: 96%; opacity: 1; }
+  100% { top: 2%; opacity: 0.8; }
+}
+
+/* ── Animation utility classes ─────────────────────────────────────────────── */
+.animate-slide-up  { animation: slideUp  0.2s ease-out; }
+.animate-fade-in   { animation: fadeIn   0.2s ease-out; }
+.animate-toast-in  { animation: toastIn  0.3s ease-out; }
+.animate-count-up  { animation: countUp  0.35s ease-out; }
+.animate-spin-slow { animation: spin 0.8s linear infinite; }
+.animate-scan-laser { animation: scanLaser 2.4s ease-in-out infinite; }
+
+.dot-1 { animation: dots 1.4s ease-in-out 0s   infinite; }
 .dot-2 { animation: dots 1.4s ease-in-out 0.2s infinite; }
 .dot-3 { animation: dots 1.4s ease-in-out 0.4s infinite; }
 
@@ -112,11 +127,38 @@ html, body, #root {
 .wave-bar:nth-child(3) { animation-delay: 0.2s; }
 .wave-bar:nth-child(4) { animation-delay: 0.3s; }
 .wave-bar:nth-child(5) { animation-delay: 0.4s; }
-.wave-bar:nth-child(6) { animation-delay: 0.2s; }
-.wave-bar:nth-child(7) { animation-delay: 0.1s; }
 
-/* Focus styles */
-input:focus, select:focus, textarea:focus, button:focus-visible {
-  outline: 2px solid #4338CA;
+/* ── Prefers-reduced-motion: disable non-essential animations ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up,
+  .animate-fade-in,
+  .animate-toast-in,
+  .animate-count-up,
+  .animate-spin-slow,
+  .dot-1, .dot-2, .dot-3,
+  .wave-bar {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Focus styles ────────────────────────────────────────────────────────────── */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 2px solid #1E40AF;
   outline-offset: 2px;
+}
+
+/* ── Sidebar transition ──────────────────────────────────────────────────────── */
+.sidebar-transition {
+  transition: width 0.2s ease, opacity 0.2s ease;
+}
+
+/* ── Mobile nav overlay ───────────────────────────────────────────────────────── */
+.mobile-nav-overlay {
+  transition: opacity 0.2s ease;
 }
