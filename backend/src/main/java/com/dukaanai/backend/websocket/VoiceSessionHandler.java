@@ -76,6 +76,12 @@ public class VoiceSessionHandler extends TextWebSocketHandler {
         String userId = jwtTokenProvider.getUserIdFromToken(token);
         String shopId = jwtTokenProvider.getShopIdFromToken(token);
         String merchantName = jwtTokenProvider.getFullNameFromToken(token);
+        if (merchantName == null || merchantName.trim().isEmpty()) {
+            merchantName = "Merchant";
+        }
+        if (shopId == null || shopId.trim().isEmpty()) {
+            shopId = userId;
+        }
 
         ClientSessionContext context = new ClientSessionContext();
         context.shopId = shopId;

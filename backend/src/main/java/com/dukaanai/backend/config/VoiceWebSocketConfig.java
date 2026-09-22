@@ -17,6 +17,6 @@ public class VoiceWebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(voiceSessionHandler, "/ws/voice-assistant")
-                .setAllowedOrigins("*");
+                .setAllowedOriginPatterns("*");
     }
 }

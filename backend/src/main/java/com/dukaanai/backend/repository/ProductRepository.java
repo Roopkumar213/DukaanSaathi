@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findByShopIdOrderByNameAsc(String shopId);
 
+    List<Product> findByShopIdOrderByCreatedAtDesc(String shopId);
+
     Optional<Product> findByShopIdAndNameIgnoreCase(String shopId, String name);
 
     List<Product> findByShopIdAndNameContainingIgnoreCase(String shopId, String query);

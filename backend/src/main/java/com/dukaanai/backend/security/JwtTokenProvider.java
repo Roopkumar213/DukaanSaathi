@@ -58,6 +58,26 @@ public class JwtTokenProvider {
         return claims.get("shopId", String.class);
     }
 
+    public String getFullNameFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.get("fullName", String.class);
+    }
+
+    public String getShopNameFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.get("shopName", String.class);
+    }
+
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);

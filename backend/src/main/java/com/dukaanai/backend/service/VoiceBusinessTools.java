@@ -93,22 +93,31 @@ public class VoiceBusinessTools {
     // ─────────────────────────────────────────────────────────────────────────────
     public List<String> getShopContextVocabulary(String shopId) {
         Set<String> vocab = new LinkedHashSet<>();
-        shopRepository.findById(shopId).ifPresent(s -> vocab.add(s.getName()));
-
-        // Add real product names from merchant DB
-        List<Product> products = productRepository.findByShopIdOrderByCreatedAtDesc(shopId);
-        for (Product p : products) {
-            vocab.add(p.getName());
-        }
-
-        // Add real customer names from merchant DB
-        List<Customer> customers = customerRepository.findByShopIdOrderByNameAsc(shopId);
-        for (Customer c : customers) {
-            vocab.add(c.getName());
-        }
-
         // Standard Kirana units & payment terms
         vocab.addAll(Arrays.asList("kg", "kilo", "gram", "packet", "litre", "bottle", "piece", "UPI", "Cash", "Khata", "Udhaar", "Biyyam", "Chawal", "Rice"));
+
+        if (shopId == null || shopId.trim().isEmpty()) {
+            return new ArrayList<>(vocab);
+        }
+
+        try {
+            shopRepository.findById(shopId).ifPresent(s -> vocab.add(s.getName()));
+
+            // Add real product names from merchant DB
+            List<Product> products = productRepository.findByShopIdOrderByNameAsc(shopId);
+            for (Product p : products) {
+                vocab.add(p.getName());
+            }
+
+            // Add real customer names from merchant DB
+            List<Customer> customers = customerRepository.findByShopIdOrderByNameAsc(shopId);
+            for (Customer c : customers) {
+                vocab.add(c.getName());
+            }
+        } catch (Exception ex) {
+            log.warn("Could not load dynamic shop vocabulary for shopId {}: {}", shopId, ex.getMessage());
+        }
+
         return new ArrayList<>(vocab);
     }
 

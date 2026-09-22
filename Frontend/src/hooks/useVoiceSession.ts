@@ -162,14 +162,21 @@ export function useVoiceSession(): VoiceSessionHook {
   }, []);
 
   const connect = useCallback(() => {
-    const currentToken = tokenRef.current;
+    const currentToken = tokenRef.current || localStorage.getItem('dukaanai_token');
     if (!currentToken) {
       setState('DISCONNECTED');
+      setErrorMessage('Please log in to connect to the voice assistant.');
       return;
     }
 
-    if (isConnectingRef.current || (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING))) {
-      return;
+    // Close and reset any prior WebSocket connection before connecting
+    if (wsRef.current) {
+      try {
+        wsRef.current.onclose = null;
+        wsRef.current.onerror = null;
+        wsRef.current.close();
+      } catch (_) {}
+      wsRef.current = null;
     }
 
     isConnectingRef.current = true;
@@ -178,7 +185,7 @@ export function useVoiceSession(): VoiceSessionHook {
 
     try {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const host = window.location.hostname;
+      const host = window.location.hostname || 'localhost';
       const wsUrl = `${protocol}//${host}:8080/ws/voice-assistant?token=${encodeURIComponent(currentToken)}`;
 
       const ws = new WebSocket(wsUrl);
